@@ -1,14 +1,64 @@
 const express = require("express");
-const path = require("path");
-
 const app = express();
+const path = require("path");
+const db = require("./db");
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(req.method, req.path, req.body);
+  next();
+});
 
 app.use("/dist", express.static(path.join(__dirname, "dist")));
+
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/api/schools", async (req, res, next) => {
+  try {
+    db.getSchools().then(schools => res.send(schools));
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get("/api/students", async (req, res, next) => {
+  try {
+    db.getStudents()
+      .then(students => res.send(students))
+      .catch(next);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/api/schools", async (req, res, next) => {
+  try {
+    db.createSchool(req.body.schoolName)
+      .then(response => res.send(response))
+      .catch(next);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/api/students", async (req, res, next) => {
+  try {
+    db.createStudent(req.body.studentName, req.body.schoolId)
+      .then(response => res.send(response))
+      .catch(next);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`listening on port ${port}`));
+db.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+  });
+});
