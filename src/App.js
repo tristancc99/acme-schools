@@ -105,9 +105,6 @@ const App = () => {
       });
   }
 
-  // console.log(schools, students);
-  // console.log(params);
-
   return (
     <div>
       <h1>Acme Schools</h1>

@@ -5,7 +5,6 @@ import axios from "axios";
 
 const UnenrolledList = props => {
   let studentData = props.studentData;
-  console.log(studentData);
 
   return (
     <div className="unenrolledList">

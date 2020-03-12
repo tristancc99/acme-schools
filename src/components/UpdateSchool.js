@@ -29,8 +29,6 @@ const UpdateSchool = props => {
     alert("School Updated!");
   }
 
-  console.log(currentSchool);
-
   return (
     <div className="updateContainer">
       <h1>{currentSchool && currentSchool.schoolname}</h1>

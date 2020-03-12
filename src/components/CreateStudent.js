@@ -12,7 +12,6 @@ const CreateStudent = props => {
 
   function handleCreate(e) {
     event.preventDefault();
-    console.log(nameInput, schoolInput);
     createStudent(nameInput, schoolInput);
   }
 
