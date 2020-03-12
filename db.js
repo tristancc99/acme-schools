@@ -21,6 +21,8 @@ const sync = async () => {
         studentName varchar(50) NOT NULL,
         studentSchoolId UUID REFERENCES schools(schoolId) DEFAULT NULL
     );
+
+    INSERT INTO schools(schoolId, schoolName) values('${uuidv4()}', 'UNF' )
     `;
   return await client.query(SQL);
 };
@@ -65,10 +67,58 @@ const createStudent = async (studentName, schoolId) => {
   }
 };
 
+const deleteSchool = async id => {
+  try {
+    const SQL = "DELETE FROM schools WHERE id = $1";
+    const response = await client.query(SQL, [id]);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteStudent = async id => {
+  try {
+    const SQL = "DELETE FROM students WHERE id = $1";
+    const response = await client.query(SQL, [id]);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateSchool = async (name, id) => {
+  try {
+    const SQL =
+      "UPDATE schools SET schoolName = $1 where schoolId = $2 RETURNING *";
+    const response = await client.query(SQL, [name, id]);
+    return response.rows[0];
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateStudent = async (studentName, studentSchoolId, studentId) => {
+  try {
+    const SQL =
+      "UPDATE students SET studentName = $1, studentSchoolId = $2 WHERE studentId = $3 RETURNING *";
+    const response = await client.query(SQL, [
+      studentName,
+      studentSchoolId || null,
+      studentId
+    ]);
+    return response.rows[0];
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   sync,
   getSchools,
   getStudents,
   createSchool,
-  createStudent
+  createStudent,
+  deleteSchool,
+  deleteStudent,
+  updateSchool,
+  updateStudent
 };

@@ -55,6 +55,42 @@ app.post("/api/students", async (req, res, next) => {
   }
 });
 
+app.delete("/api/schools/:id", (req, res, next) => {
+  db.deleteSchool(req.params.id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
+app.delete("/api/students/:id", (req, res, next) => {
+  db.deleteStudent(req.params.id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
+app.put("/api/students/:id", (req, res, next) => {
+  try {
+    db.updateStudent(
+      req.body.studentname,
+      req.body.studentschoolid,
+      req.body.studentid
+    )
+      .then(student => res.send(student))
+      .catch(next);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.put("/api/schools/:id", (req, res, next) => {
+  try {
+    db.updateSchool(req.body.schoolname, req.body.schoolid)
+      .then(school => res.send(school))
+      .catch(next);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 const port = process.env.PORT || 3000;
 
 db.sync().then(() => {
